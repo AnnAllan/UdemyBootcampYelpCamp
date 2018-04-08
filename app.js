@@ -13,28 +13,30 @@ app.set("view engine", "ejs");
 // Schema setup
 var campgroundSchema = new mongoose.Schema({
   name: String,
-  image: String
+  image: String,
+  description: String
 });
 
 var Campground = mongoose.model("Campground", campgroundSchema);
-// Campground.create(
-//   {
-//     name: "Granite Hill",
-//     image: "https://pixabay.com/get/eb30b80b21f3043ed1584d05fb1d4e97e07ee3d21cac104497f3c17da4efb5ba_340.jpg"
-//   }, function(err, campground){
-//     if(err){
-//       console.log(err);
-//     } else {
-//       console.log("newly");
-//       console.log(campground);
-//     }
-//   });
-//
+Campground.create(
+  {
+    name: "Granite Hill",
+    image: "https://pixabay.com/get/eb30b80b21f3043ed1584d05fb1d4e97e07ee3d21cac104497f3c17da4efb5ba_340.jpg",
+    description: "This is a huge granite hill, no bathrooms, no water.  Beautiful granite."
+  }, function(err, campground){
+    if(err){
+      console.log(err);
+    } else {
+      console.log("newly");
+      console.log(campground);
+    }
+  });
+
 
 app.get("/", function(req, res){
   res.render("landing");
 });
-
+// Index - show all campgrounds
 app.get("/campgrounds", function(req, res){
   // Get all campgrounds from DB
   Campground.find({}, function(err, allCampgrounds){
@@ -45,7 +47,7 @@ app.get("/campgrounds", function(req, res){
     }
   });
 });
-
+// Create - add new campground to db
 app.post("/campgrounds", function(req, res){
   // get data from form and add to campgroundsarray
   var name = req.body.name;
@@ -61,9 +63,15 @@ app.post("/campgrounds", function(req, res){
     }
   });
 });
-
+// New show form to create new campground
 app.get("/campgrounds/new", function(req, res){
   res.render("new.ejs");
+});
+// Show - show all information for one campground
+app.get("/campgrounds/:id", function(req, res){
+  // find the campground with provided ID
+  // render show template with that campground
+  res.send("show");
 });
 
 app.listen(app.get('port'), function(){
