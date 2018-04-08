@@ -10,6 +10,7 @@ var seedDB = require("./seeds");
 mongoose.connect("mongodb://localhost/yelp_camp");
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static(__dirname + "/public"));
 
 app.set('port', process.env.PORT || 3000)
 app.set("view engine", "ejs");
