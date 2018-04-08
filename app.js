@@ -14,25 +14,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set('port', process.env.PORT || 3000)
 app.set("view engine", "ejs");
 
-// Campground.create(
-//   {
-//     name: "Granite Hill",
-//     image: "https://pixabay.com/get/e835b90e21fd023ed1584d05fb1d4e97e07ee3d21cac104497f3c379a3ebb1ba_340.jpg",
-//     description: "This is a huge granite hill, no bathrooms, no water.  Beautiful granite."
-//   }, function(err, campground){
-//     if(err){
-//       console.log(err);
-//     } else {
-//       console.log("newly");
-//       console.log(campground);
-//     }
-//   });
-
-
 app.get("/", function(req, res){
   res.render("landing");
 });
-// Index - show all campgrounds
+// INDEX - show all campgrounds
 app.get("/campgrounds", function(req, res){
   // Get all campgrounds from DB
   Campground.find({}, function(err, allCampgrounds){
@@ -43,7 +28,7 @@ app.get("/campgrounds", function(req, res){
     }
   });
 });
-// Create - add new campground to db
+// CREATE- add new campground to db
 app.post("/campgrounds", function(req, res){
   // get data from form and add to campgroundsarray
   var name = req.body.name;
@@ -60,17 +45,17 @@ app.post("/campgrounds", function(req, res){
     }
   });
 });
-// New show form to create new campground
+// NEW form to create new campground
 app.get("/campgrounds/new", function(req, res){
   res.render("new.ejs");
 });
-// Show - show all information for one campground
+// SHOW - show all information for one campground
 app.get("/campgrounds/:id", function(req, res){
   // find the campground with provided ID
-Campground.findById(req.params.id, function(err, foundCampground){
+Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
   if(err){
     console.log(err);
-  } else{
+  } else {
     // render show template with that campground
     res.render("show", {campground: foundCampground});
   }
