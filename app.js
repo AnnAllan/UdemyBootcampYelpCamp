@@ -5,7 +5,6 @@ var mongoose = require("mongoose");
 var Campground = require("./models/campground");
 var seedDB = require("./seeds");
 
-seedDB();
 
 mongoose.connect("mongodb://localhost/yelp_camp");
 
@@ -13,6 +12,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.set('port', process.env.PORT || 3000)
 app.set("view engine", "ejs");
+
+seedDB();
+
 
 app.get("/", function(req, res){
   res.render("landing");
@@ -24,7 +26,7 @@ app.get("/campgrounds", function(req, res){
     if(err){
       console.log(err);
     } else {
-      res.render("index", { campgrounds:allCampgrounds  });
+      res.render("campgrounds/index", { campgrounds:allCampgrounds  });
     }
   });
 });
@@ -47,7 +49,7 @@ app.post("/campgrounds", function(req, res){
 });
 // NEW form to create new campground
 app.get("/campgrounds/new", function(req, res){
-  res.render("new.ejs");
+  res.render("campgrounds/new");
 });
 // SHOW - show all information for one campground
 app.get("/campgrounds/:id", function(req, res){
@@ -57,10 +59,22 @@ Campground.findById(req.params.id).populate("comments").exec(function(err, found
     console.log(err);
   } else {
     // render show template with that campground
-    res.render("show", {campground: foundCampground});
+    res.render("campgrounds/show", {campground: foundCampground});
   }
 });
 });
+
+
+
+app.get("/campgrounds/:id/comments/new", function(req, res){
+  Campground.findById(req.params.id, function(err, campground){
+    if(err){
+      console.log(err);
+    } else {
+      res.render("comments/new", {campground: campground});
+    }
+  })
+})
 
 app.listen(app.get('port'), function(){
   console.log("The YelpCamp Server has started");
