@@ -8,6 +8,7 @@ var seedDB = require("./seeds");
 var passport = require("passport");
 var LocalStrategy = require("passport-local");
 var User = require("./models/user");
+var methodOverride = require("method-override");
 
 // requiring routes
 var commentRoutes = require("./routes/comments");
@@ -21,6 +22,7 @@ app.use(express.static(__dirname + "/public"));
 
 app.set('port', process.env.PORT || 3000);
 app.set("view engine", "ejs");
+app.use(methodOverride("_method"));
 
 // seedDB();
 
