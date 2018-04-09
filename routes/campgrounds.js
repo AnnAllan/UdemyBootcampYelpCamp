@@ -1,5 +1,9 @@
+var express = require("express");
+var router = express.Router();
+var Campground = require("../models/campground");
+
 // INDEX - show all campgrounds
-app.get("/campgrounds", function(req, res){
+router.get("/", function(req, res){
   // Get all campgrounds from DB
   Campground.find({}, function(err, allCampgrounds){
     if(err){
@@ -9,8 +13,9 @@ app.get("/campgrounds", function(req, res){
     }
   });
 });
+
 // CREATE- add new campground to db
-app.post("/campgrounds", function(req, res){
+router.post("/", function(req, res){
   // get data from form and add to campgroundsarray
   var name = req.body.name;
   var image = req.body.image;
@@ -26,19 +31,31 @@ app.post("/campgrounds", function(req, res){
     }
   });
 });
+
 // NEW form to create new campground
-app.get("/campgrounds/new", function(req, res){
+router.get("/new", function(req, res){
   res.render("campgrounds/new");
 });
+
 // SHOW - show all information for one campground
-app.get("/campgrounds/:id", function(req, res){
+router.get("/:id", function(req, res){
   // find the campground with provided ID
-Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
-  if(err){
-    console.log(err);
-  } else {
-    // render show template with that campground
-    res.render("campgrounds/show", {campground: foundCampground});
+  Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
+    if(err){
+      console.log(err);
+    } else {
+      // render show template with that campground
+      res.render("campgrounds/show", {campground: foundCampground});
+    }
+  });
+});
+
+function isLoggedIn(req, res, next){
+  if(req.isAuthenticated(0)){
+    return next();
   }
-});
-});
+  res.redirect("/login");
+}
+
+
+module.exports = router;
