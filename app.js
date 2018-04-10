@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+var flash = require("connect-flash");
 var Campground = require("./models/campground");
 var Comment = require("./models/comment");
 var seedDB = require("./seeds");
@@ -23,7 +24,7 @@ app.use(express.static(__dirname + "/public"));
 app.set('port', process.env.PORT || 3000);
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
-
+app.use(flash());
 // seedDB();
 
 //PASSPORT CONFIG
